@@ -12,3 +12,13 @@ Tasks:
 	goproj get  : get all dependencies
 	goproj here : Set GOPATH to this project
 ```
+##Package management format
+Sample:
+``` yml
+deps: [
+	"github.com/WitzHsiao/goproj", 
+	"gopkg.in/yaml.v2"
+	]
+```
+##Reference
+Inspired by [mattn/gom](https://github.com/mattn/gom)
