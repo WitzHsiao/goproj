@@ -22,7 +22,7 @@ func main() {
 	case "get":
 		err = get()
 	case "here":
-		err = here()
+		here()
 	default:
 		usage()
 	}

@@ -36,25 +36,15 @@ func get() error {
 	return nil
 }
 
-func here() error {
-	err := setEnv()
-	if err != nil {
-		return err
-	}
-	return nil
+func here() {
+	setEnv()
 }
 
-func setEnv() error {
+func setEnv() {
 	// Get the current user.
 	me, err := user.Current()
 	if err != nil {
-		return err
-	}
-
-	// Get the current working directory.
-	cwd, err := os.Getwd()
-	if err != nil {
-		return err
+		panic(err)
 	}
 
 	// Set an environment variable.
@@ -65,27 +55,27 @@ func setEnv() error {
 	// and also set target directory for the shell to start in.
 	pa := os.ProcAttr{
 		Files: []*os.File{os.Stdin, os.Stdout, os.Stderr},
-		Dir:   cwd,
+		Dir:   pwd,
 	}
 
 	// Start up a new shell.
 	// Note that we supply "login" twice.
 	// -fpl means "don't prompt for PW and pass through environment."
-	fmt.Print(">> Starting a new interactive shell and set GOPATH")
+	fmt.Print(">> Starting a new interactive shell and set GOPATH\n")
+
 	proc, err := os.StartProcess("/usr/bin/login", []string{"login", "-fpl", me.Username}, &pa)
 	if err != nil {
-		return err
+		panic(err)
 	}
 
-	// Wait until user exits the shell
+	//// Wait until user exits the shell
 	state, err := proc.Wait()
 	if err != nil {
-		return err
+		panic(err)
 	}
 
-	// Keep on keepin' on.
+	//// Keep on keepin' on.
 	fmt.Printf("<< Exited shell: %s\n", state.String())
-	return nil
 }
 
 func genPackageYml() error {
@@ -108,9 +98,6 @@ func initial() error {
 	if err != nil {
 		return err
 	}
-	err = here()
-	if err != nil {
-		return err
-	}
+	here()
 	return nil
 }
