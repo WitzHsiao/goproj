@@ -13,7 +13,8 @@ Tasks:
 	goproj here : Set GOPATH to this project
 ```
 ##Package management format
-Sample:
+1. Using yaml
+2. Sample:
 ``` yml
 deps: [
 	"github.com/WitzHsiao/goproj", 
