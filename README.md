@@ -8,7 +8,7 @@
 ```
 Usage of goproj:
 Tasks:
-	goproj init : Initial a go project
+	goproj init : Initial a go project and set GOPATH to it
 	goproj get  : get all dependencies
 	goproj here : Set GOPATH to this project
 ```
