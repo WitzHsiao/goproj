@@ -42,26 +42,28 @@ func here() {
 func setEnv() {
 	pwd, _ := os.Getwd()
 
+	shell := os.Getenv("SHELL")
+	if shell == "" {
+		panic("Can't not find shell")
+	}
+
 	pa := &os.ProcAttr{
 		Files: []*os.File{os.Stdin, os.Stdout, os.Stderr},
 		Dir:   pwd,
 		Env:   append(os.Environ(), fmt.Sprintf("GOPATH=%s", pwd)),
 	}
 
-	fmt.Print(">> Starting a new interactive shell and set GOPATH\n")
+	fmt.Print(welecome_words)
 
-	proc, err := os.StartProcess("/usr/bin/env", []string{"/usr/bin/env", "zsh"}, pa)
+	proc, err := os.StartProcess(shell, []string{shell}, pa)
 	if err != nil {
-		proc, err = os.StartProcess("/usr/bin/env", []string{"/usr/bin/env", "bash"}, pa)
-		if err != nil {
-			panic(err)
-		}
+		panic(err)
 	}
 	_, err = proc.Wait()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Print(">> Exit shell\n")
+	fmt.Print(goodbye_words)
 }
 
 func genPackageYml() error {
@@ -87,3 +89,30 @@ func initial() error {
 	here()
 	return nil
 }
+
+const welecome_words = `
+      ___         ___         ___                   ___         ___                   ___         ___
+     /\  \       /\  \       /\  \        ___      /\__\       /\  \                 /\  \       /\  \
+    /::\  \     /::\  \     /::\  \      /\  \    /::|  |     /::\  \               /::\  \     /::\  \
+   /:/\:\  \   /:/\:\  \   /:/\:\  \     \:\  \  /:|:|  |    /:/\:\  \             /:/\:\  \   /:/\:\  \
+  /:/  \:\  \ /:/  \:\  \ /:/  \:\__\    /::\__\/:/|:|  |__ /:/  \:\  \           /:/  \:\  \ /:/  \:\  \
+ /:/__/ \:\__/:/__/ \:\__/:/__/ \:|__|__/:/\/__/:/ |:| /\__/:/__/_\:\__\         /:/__/_\:\__/:/__/ \:\__\
+ \:\  \  \/__\:\  \ /:/  \:\  \ /:/  /\/:/  /  \/__|:|/:/  \:\  /\ \/__/         \:\  /\ \/__\:\  \ /:/  /
+  \:\  \      \:\  /:/  / \:\  /:/  /\::/__/       |:/:/  / \:\ \:\__\            \:\ \:\__\  \:\  /:/  /
+   \:\  \      \:\/:/  /   \:\/:/  /  \:\__\       |::/  /   \:\/:/  /             \:\/:/  /   \:\/:/  /
+    \:\__\      \::/  /     \::/__/    \/__/       /:/  /     \::/  /               \::/  /     \::/  /
+     \/__/       \/__/       ~~                    \/__/       \/__/                 \/__/       \/__/
+`
+const goodbye_words = `
+      ___         ___         ___         ___                   ___      ___         ___
+     /\  \       /\  \       /\  \       /\  \                 /\  \    |\__\       /\  \
+    /::\  \     /::\  \     /::\  \     /::\  \               /::\  \   |:|  |     /::\  \
+   /:/\:\  \   /:/\:\  \   /:/\:\  \   /:/\:\  \             /:/\:\  \  |:|  |    /:/\:\  \
+  /:/  \:\  \ /:/  \:\  \ /:/  \:\  \ /:/  \:\__\           /::\~\:\__\ |:|__|__ /::\~\:\  \
+ /:/__/_\:\__/:/__/ \:\__/:/__/ \:\__/:/__/ \:|__|         /:/\:\ \:|__|/::::\__/:/\:\ \:\__\
+ \:\  /\ \/__\:\  \ /:/  \:\  \ /:/  \:\  \ /:/  /         \:\~\:\/:/  /:/~~/~  \:\~\:\ \/__/
+  \:\ \:\__\  \:\  /:/  / \:\  /:/  / \:\  /:/  /           \:\ \::/  /:/  /     \:\ \:\__\
+   \:\/:/  /   \:\/:/  /   \:\/:/  /   \:\/:/  /             \:\/:/  /\/__/       \:\ \/__/
+    \::/  /     \::/  /     \::/  /     \::/__/               \::/__/              \:\__\
+     \/__/       \/__/       \/__/       ~~                    ~~                   \/__/
+`
